@@ -1,8 +1,5 @@
 import Banner from "@/components/LandingPages/Home/Banner";
-import Categories from "@/components/LandingPages/Home/Categories";
-import ProductTab from "@/components/LandingPages/Home/Products/ProductTab";
-import Brands from "@/components/LandingPages/Home/Brands";
-import FeatureProduct from "@/components/LandingPages/Home/Products/FeatureProduct";
+import NewArrivalProducts from "@/components/LandingPages/Home/Products/NewArrivalProducts";
 
 export const metadata = {
   title: "Home | Viscart",
@@ -13,10 +10,7 @@ const page = async () => {
   return (
     <div className="overflow-x-hidden">
       <Banner />
-      <Categories />
-      <ProductTab />
-      <FeatureProduct />
-      <Brands />
+      <NewArrivalProducts />
     </div>
   );
 };

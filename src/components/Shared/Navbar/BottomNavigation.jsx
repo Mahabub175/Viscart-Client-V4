@@ -38,7 +38,7 @@ const BottomNavigation = () => {
             href={item.href}
             className="flex flex-col items-center text-gray-600 hover:text-primary transition"
           >
-            <span className="text-2xl">{item.icon}</span>
+            <span className="text-xl">{item.icon}</span>
             <span className="text-sm mt-1">{item.name}</span>
           </Link>
         ))}

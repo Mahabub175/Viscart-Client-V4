@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRef } from "react";
-import { Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
 import { SwiperSlide, Swiper } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -24,14 +24,17 @@ const Banner = () => {
         onBeforeInit={(swiper) => {
           swiperRef.current = swiper;
         }}
-        modules={[Navigation, Pagination]}
+        modules={[Autoplay, Pagination]}
         spaceBetween={20}
         loop={true}
         slidesPerView={1}
-        navigation
         pagination={{
           clickable: true,
           el: ".custom-pagination",
+        }}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: false,
         }}
         className="max-h-[700px]"
       >

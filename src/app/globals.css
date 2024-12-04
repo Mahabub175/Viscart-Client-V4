@@ -2,11 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+.two-grid {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-4;
+}
+.three-grid {
+  @apply grid grid-cols-1 lg:grid-cols-3 gap-4;
+}
+.my-container {
+  @apply max-w-[1900px] mx-auto px-5;
+}
+
 @layer base {
   :root {
     --primaryColor: theme("colors.primary");
     --primaryLightColor: theme("colors.primaryLight");
-    background-color: #f3f5f6;
   }
 }
 
@@ -92,14 +101,4 @@
   background-color: var(--primaryColor);
   transform: scale(1.2);
   box-shadow: 0 0 5px var(--primaryColor);
-}
-
-.two-grid {
-  @apply grid grid-cols-1 lg:grid-cols-2 gap-4;
-}
-.three-grid {
-  @apply grid grid-cols-1 lg:grid-cols-3 gap-4;
-}
-.my-container {
-  @apply container mx-auto px-5;
 }

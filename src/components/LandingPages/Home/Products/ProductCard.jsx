@@ -1,4 +1,4 @@
-import { Rate, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import Image from "next/image";
 import React from "react";
 import QuickViewHover from "../../Products/QuickViewHover";
@@ -12,17 +12,8 @@ const ProductCard = ({ item }) => {
   const pathname = usePathname();
 
   return (
-    <div className="border hover:border-primary duration-300 rounded-xl shadow-xl relative group w-[300px] lg:h-[480px] mx-auto bg-white">
-      {item?.stock > 0 ? (
-        <div className="absolute top-2 right-2 p-2 bg-gradient-to-r from-green-500 to-green-700 text-white rounded font-bold text-xs z-10">
-          In Stock
-        </div>
-      ) : (
-        <div className="absolute top-2 right-2 p-2 bg-gradient-to-r from-red-500 to-red-700 text-white rounded font-bold text-xs z-10">
-          Out Of Stock
-        </div>
-      )}
-      <div className="relative overflow-hidden rounded-t-xl">
+    <div className="rounded-xl relative group w-[260px] mx-auto h-[550px] flex flex-col">
+      <div className="relative lg:overflow-hidden rounded-xl">
         <Image
           src={
             pathname === "/products"
@@ -32,7 +23,7 @@ const ProductCard = ({ item }) => {
           alt={item?.name}
           width={300}
           height={260}
-          className="rounded-t-xl h-[260px] group-hover:scale-110 duration-500"
+          className="rounded-xl h-[380px] group-hover:scale-110 duration-500"
         />
 
         <div className="hidden lg:block absolute inset-x-0 bottom-0 transform translate-y-full group-hover:translate-y-0 duration-500 z-10">
@@ -43,40 +34,35 @@ const ProductCard = ({ item }) => {
         </div>
       </div>
 
-      <div className="bg-white p-5 rounded-b-xl">
+      <div className="p-5">
         <Link href={`/products/${item?.slug}`}>
-          <h2 className="text-start font-normal text-textColor text-sm">
-            {item?.category?.name}
-          </h2>
           <Tooltip placement="top" title={item?.name}>
-            <h2 className="text-lg text-start font-semibold mt-2 mb-6">
+            <h2 className="text-md text-start font-semibold mt-2 mb-4">
               {item?.name.length > 50
                 ? item.name.slice(0, 50).concat("...")
                 : item.name}
             </h2>
           </Tooltip>
-
-          <div className="flex items-center mb-2 gap-4 font-bold">
-            <Rate disabled value={item?.ratings?.average} allowHalf />(
-            {item?.ratings?.count})
-          </div>
           <div className="flex items-center gap-4 justify-start">
             {item?.offerPrice && (
-              <p className="text-base font-bold line-through text-red-500">
+              <p className="text-base font-bold line-through text-black/60">
                 {globalData?.results?.currency + " " + item?.sellingPrice}
               </p>
             )}
             {item?.offerPrice ? (
-              <p className="text-primary text-2xl font-bold">
+              <p className="text-black text-xl font-bold">
                 {globalData?.results?.currency + " " + item?.offerPrice}
               </p>
             ) : (
-              <p className="text-primary text-2xl font-bold">
+              <p className="text-black text-xl font-bold">
                 {globalData?.results?.currency + " " + item?.sellingPrice}
               </p>
             )}
           </div>
         </Link>
+        {!item?.stock > 0 && (
+          <div className=" text-red-500">(Out Of Stock)</div>
+        )}
       </div>
     </div>
   );

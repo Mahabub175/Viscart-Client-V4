@@ -18,6 +18,10 @@ module.exports = {
       boxShadow: {
         xl: "0 0 10px 5px #e5e5e5",
       },
+      screens: {
+        xl: "1600px",
+        lg: "1280px",
+      },
     },
   },
   plugins: [],
