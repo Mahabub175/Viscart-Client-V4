@@ -11,12 +11,28 @@ import { useState } from "react";
 import { FaHeart, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
 import { FaCodeCompare } from "react-icons/fa6";
 import CategoryNavigation from "./CategoryNavigation";
+import { useSelector } from "react-redux";
+import { useCurrentUser } from "@/redux/services/auth/authSlice";
+import { useDeviceId } from "@/redux/services/device/deviceSlice";
+import { useGetSingleUserQuery } from "@/redux/services/auth/authApi";
+import { useGetSingleCompareByUserQuery } from "@/redux/services/compare/compareApi";
+import { useGetSingleWishlistByUserQuery } from "@/redux/services/wishlist/wishlistApi";
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [options, setOptions] = useState([]);
+
+  const user = useSelector(useCurrentUser);
+  const deviceId = useSelector(useDeviceId);
+  const { data } = useGetSingleUserQuery(user?._id);
+  const { data: compareData } = useGetSingleCompareByUserQuery(
+    user?._id ?? deviceId
+  );
+  const { data: wishListData } = useGetSingleWishlistByUserQuery(
+    user?._id ?? deviceId
+  );
 
   const { data: globalData } = useGetAllGlobalSettingQuery();
   const { data: products } = useGetAllProductsQuery(undefined, {
@@ -101,8 +117,31 @@ const Navbar = () => {
           <Link href={"/sign-in"}>
             <FaUser className="cursor-pointer hover:text-primary duration-300" />
           </Link>
-          <FaCodeCompare className="cursor-pointer rotate-90 hover:text-primary duration-300" />
-          <FaHeart className="cursor-pointer hover:text-primary duration-300" />
+
+          <Link href={"/compare"}>
+            {compareData?.[0]?.product?.length > 0 ? (
+              <span className="relative">
+                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                  {compareData?.[0]?.product?.length}
+                </span>
+                <FaCodeCompare className="cursor-pointer rotate-90 hover:text-primary duration-300" />
+              </span>
+            ) : (
+              <FaCodeCompare className="cursor-pointer rotate-90 hover:text-primary duration-300" />
+            )}
+          </Link>
+          <Link href={"/wishlist"}>
+            {wishListData?.length > 0 ? (
+              <span className="relative">
+                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                  {wishListData?.length}
+                </span>
+                <FaHeart className="cursor-pointer hover:text-primary duration-300" />
+              </span>
+            ) : (
+              <FaHeart className="cursor-pointer hover:text-primary duration-300" />
+            )}
+          </Link>
           <FaShoppingBag
             className="cursor-pointer hover:text-primary duration-300"
             onClick={() => setIsCartOpen(true)}
@@ -111,7 +150,6 @@ const Navbar = () => {
       </nav>
 
       <Drawer
-        title="Menu"
         placement="left"
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
@@ -137,7 +175,6 @@ const Navbar = () => {
         </div>
       </Modal>
       <Drawer
-        title="Menu"
         placement="right"
         onClose={() => setIsCartOpen(false)}
         open={isCartOpen}

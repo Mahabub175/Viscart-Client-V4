@@ -65,8 +65,8 @@ const SingleProductDetails = ({ params }) => {
                   "https://thumbs.dreamstime.com/b/demo-demo-icon-139882881.jpg"
                 }
                 alt="product image"
-                height={800}
-                width={800}
+                height={600}
+                width={600}
               />
             </Zoom>
           ) : (

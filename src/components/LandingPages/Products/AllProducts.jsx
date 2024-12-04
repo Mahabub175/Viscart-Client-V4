@@ -85,7 +85,7 @@ const AllProducts = () => {
     });
 
   return (
-    <section className="container mx-auto px-5 py-10 relative -mt-10 lg:-mt-0">
+    <section className="my-container py-10 relative -mt-10 lg:-mt-0">
       <div className="bg-gray-200 flex items-center justify-between py-3 px-6 mb-6 rounded-xl">
         <p>
           There are{" "}
@@ -156,7 +156,7 @@ const AllProducts = () => {
           <div>
             {filteredProducts?.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 overflow-x-hidden">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 overflow-x-hidden">
                   {filteredProducts?.map((product) => (
                     <ProductCard key={product?._id} item={product} />
                   ))}
