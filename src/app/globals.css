@@ -79,6 +79,21 @@
   display: none !important;
 }
 
+.custom-pagination .swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 50%;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.custom-pagination .swiper-pagination-bullet-active {
+  background-color: var(--primaryColor);
+  transform: scale(1.2);
+  box-shadow: 0 0 5px var(--primaryColor);
+}
+
 .two-grid {
   @apply grid grid-cols-1 lg:grid-cols-2 gap-4;
 }
