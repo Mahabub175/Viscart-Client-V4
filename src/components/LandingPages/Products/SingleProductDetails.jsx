@@ -12,7 +12,7 @@ import "react-medium-image-zoom/dist/styles.css";
 import ProductCard from "../Home/Products/ProductCard";
 import { useGetAllGlobalSettingQuery } from "@/redux/services/globalSetting/globalSettingApi";
 import Image from "next/image";
-import { FaWhatsapp, FaPlay } from "react-icons/fa";
+import { FaPlay } from "react-icons/fa";
 import { formatImagePath } from "@/utilities/lib/formatImagePath";
 import { usePathname } from "next/navigation";
 
@@ -23,12 +23,6 @@ const SingleProductDetails = ({ params }) => {
   );
 
   const pathname = usePathname();
-
-  const businessWhatsapp = globalData?.results?.businessWhatsapp;
-
-  const handleWhatsappClick = () => {
-    window.open(`https://wa.me/${businessWhatsapp}`, "_blank");
-  };
 
   const { data: productData } = useGetAllProductsQuery();
 
@@ -61,7 +55,7 @@ const SingleProductDetails = ({ params }) => {
 
   return (
     <section className="my-container py-10">
-      <div className="border-2 border-primary rounded-xl p-5 flex flex-col lg:flex-row items-center justify-center gap-10 mb-10 shadow-xl">
+      <div className="p-5 flex flex-col lg:flex-row items-center justify-center gap-10 mb-10">
         <div className="bg-primaryLight p-10 rounded-xl relative">
           {currentImage ? (
             <Zoom>
@@ -71,8 +65,8 @@ const SingleProductDetails = ({ params }) => {
                   "https://thumbs.dreamstime.com/b/demo-demo-icon-139882881.jpg"
                 }
                 alt="product image"
-                height={400}
-                width={400}
+                height={800}
+                width={800}
               />
             </Zoom>
           ) : (
@@ -168,19 +162,9 @@ const SingleProductDetails = ({ params }) => {
             fullWidth
             previousSelectedVariant={selectedVariant}
           />
-          <div
-            className="w-full bg-primary px-10 py-2 text-sm rounded-full shadow-xl mt-10 text-center text-white font-bold cursor-pointer"
-            onClick={handleWhatsappClick}
-          >
-            <p>Click To Place a Order With Just a Phone Call</p>
-            <div className="flex items-center justify-center gap-2 mt-1">
-              <FaWhatsapp className="text-2xl" />
-              <p>{businessWhatsapp}</p>
-            </div>
-          </div>
         </div>
       </div>
-      <div className="border-2 border-primary rounded-xl p-5 mb-10 shadow-xl bg-white flex flex-col items-center justify-center">
+      <div className="rounded-xl p-5 mb-10 shadow-xl bg-white flex flex-col items-center justify-center">
         <div className="bg-primary mb-10 px-10 py-2 text-white font-bold rounded-xl inline-block">
           Description
         </div>
@@ -192,9 +176,9 @@ const SingleProductDetails = ({ params }) => {
         {activeProducts && activeProducts.length > 0 ? (
           <>
             <h2 className="text-3xl font-bold mb-5 border-b pb-2">
-              Similar Products
+              Related Products
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-5">
               {activeProducts.map((product) => (
                 <ProductCard key={product._id} item={product} />
               ))}
