@@ -25,7 +25,6 @@ const Banner = () => {
           swiperRef.current = swiper;
         }}
         modules={[Autoplay, Pagination]}
-        spaceBetween={20}
         loop={true}
         slidesPerView={1}
         pagination={{
