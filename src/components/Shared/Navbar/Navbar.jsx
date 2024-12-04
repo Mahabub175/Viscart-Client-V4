@@ -17,6 +17,9 @@ import { useDeviceId } from "@/redux/services/device/deviceSlice";
 import { useGetSingleUserQuery } from "@/redux/services/auth/authApi";
 import { useGetSingleCompareByUserQuery } from "@/redux/services/compare/compareApi";
 import { useGetSingleWishlistByUserQuery } from "@/redux/services/wishlist/wishlistApi";
+import DrawerCart from "../Product/DrawerCart";
+import { GiCancel } from "react-icons/gi";
+import { useGetSingleCartByUserQuery } from "@/redux/services/cart/cartApi";
 
 const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -31,6 +34,9 @@ const Navbar = () => {
     user?._id ?? deviceId
   );
   const { data: wishListData } = useGetSingleWishlistByUserQuery(
+    user?._id ?? deviceId
+  );
+  const { data: cartData, refetch } = useGetSingleCartByUserQuery(
     user?._id ?? deviceId
   );
 
@@ -142,10 +148,22 @@ const Navbar = () => {
               <FaHeart className="cursor-pointer hover:text-primary duration-300" />
             )}
           </Link>
-          <FaShoppingBag
-            className="cursor-pointer hover:text-primary duration-300"
-            onClick={() => setIsCartOpen(true)}
-          />
+          {cartData?.length > 0 ? (
+            <span className="relative">
+              <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                {cartData?.length}
+              </span>
+              <FaShoppingBag
+                className="cursor-pointer hover:text-primary duration-300"
+                onClick={() => setIsCartOpen(true)}
+              />
+            </span>
+          ) : (
+            <FaShoppingBag
+              className="cursor-pointer hover:text-primary duration-300"
+              onClick={() => setIsCartOpen(true)}
+            />
+          )}
         </div>
       </nav>
 
@@ -154,6 +172,22 @@ const Navbar = () => {
         onClose={() => setIsDrawerOpen(false)}
         open={isDrawerOpen}
       >
+        <div className="flex justify-between items-center -mt-5 mb-10">
+          <Link href={"/"}>
+            <Image
+              src={globalData?.results?.logo}
+              alt="logo"
+              width={50}
+              height={50}
+            />
+          </Link>
+          <button
+            className="mt-1 bg-gray-200 hover:scale-110 duration-500 rounded-full p-1"
+            onClick={() => setIsDrawerOpen(false)}
+          >
+            <GiCancel className="text-xl text-gray-700" />
+          </button>
+        </div>
         <CategoryNavigation />
       </Drawer>
       <Modal
@@ -178,8 +212,19 @@ const Navbar = () => {
         placement="right"
         onClose={() => setIsCartOpen(false)}
         open={isCartOpen}
+        width={450}
+        destroyOnClose
       >
-        <CategoryNavigation />
+        <div className="flex justify-between items-center mb-4 border-b pb-4">
+          <p className="text-2xl font-semibold">Shopping Cart</p>
+          <button
+            className="mt-1 bg-gray-200 hover:scale-110 duration-500 rounded-full p-1"
+            onClick={() => setIsCartOpen(false)}
+          >
+            <GiCancel className="text-xl text-gray-700" />
+          </button>
+        </div>
+        <DrawerCart data={cartData} refetch={refetch} />
       </Drawer>
     </header>
   );
