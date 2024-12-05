@@ -15,7 +15,7 @@ const LandingFooter = () => {
       <footer className="my-container py-10">
         <div className="grid lg:grid-cols-5 items-start justify-center">
           <div className="flex flex-col items-start gap-4">
-            <h3 className="text-2xl font-bold mb-6">Social</h3>
+            <h3 className="text-2xl font-bold mb-2">Social</h3>
             <Link
               href={globalData?.results?.businessFacebook ?? "/"}
               target="_blank"
