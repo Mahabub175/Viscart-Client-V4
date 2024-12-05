@@ -18,4 +18,14 @@ export const footerData = [
       { name: "New products", to: "new-products" },
     ],
   },
+  {
+    title: "Help",
+    links: [
+      { name: "About Us", to: "about-us" },
+      { name: "Connect", to: "connect" },
+      { name: "Hot Deals", to: "hot-deals" },
+      { name: "Promotions", to: "promotions" },
+      { name: "New products", to: "new-products" },
+    ],
+  },
 ];
