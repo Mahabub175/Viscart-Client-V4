@@ -10,15 +10,27 @@ import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { useSelector } from "react-redux";
 import { useCurrentUser } from "@/redux/services/auth/authSlice";
 import { useGetSingleUserQuery } from "@/redux/services/auth/authApi";
+import { FaCodeCompare } from "react-icons/fa6";
 
-const BottomNavigation = () => {
+const BottomNavigation = ({ setIsCartOpen }) => {
   const user = useSelector(useCurrentUser);
   const { data } = useGetSingleUserQuery(user?._id);
 
   const navItems = [
     { name: "Product", href: "/products", icon: <AppstoreOutlined /> },
     { name: "Wishlist", href: "/wishlist", icon: <HeartOutlined /> },
-    { name: "Cart", href: "/cart", icon: <ShoppingCartOutlined /> },
+    // Updated Cart item
+    {
+      name: "Cart",
+      href: "/cart",
+      icon: <ShoppingCartOutlined />,
+      onClick: () => setIsCartOpen(true), // Open cart when clicked
+    },
+    {
+      name: "Compare",
+      href: "/compare",
+      icon: <FaCodeCompare className="rotate-90" />,
+    },
   ];
 
   if (data?.role) {
@@ -37,6 +49,12 @@ const BottomNavigation = () => {
             key={item.name}
             href={item.href}
             className="flex flex-col items-center text-gray-600 hover:text-primary transition"
+            onClick={(e) => {
+              if (item.onClick) {
+                e.preventDefault();
+                item.onClick();
+              }
+            }}
           >
             <span className="text-xl">{item.icon}</span>
             <span className="text-sm mt-1">{item.name}</span>

@@ -3,16 +3,16 @@
 import { useGetAllGlobalSettingQuery } from "@/redux/services/globalSetting/globalSettingApi";
 import { useGetAllProductsQuery } from "@/redux/services/product/productApi";
 import { formatImagePath } from "@/utilities/lib/formatImagePath";
-import { MenuOutlined } from "@ant-design/icons";
-import { AutoComplete, Button, Drawer, Modal } from "antd";
+import { MenuOutlined, UserOutlined } from "@ant-design/icons";
+import { AutoComplete, Avatar, Button, Drawer, Modal, Popover } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { FaHeart, FaSearch, FaShoppingBag, FaUser } from "react-icons/fa";
 import { FaCodeCompare } from "react-icons/fa6";
 import CategoryNavigation from "./CategoryNavigation";
-import { useSelector } from "react-redux";
-import { useCurrentUser } from "@/redux/services/auth/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout, useCurrentUser } from "@/redux/services/auth/authSlice";
 import { useDeviceId } from "@/redux/services/device/deviceSlice";
 import { useGetSingleUserQuery } from "@/redux/services/auth/authApi";
 import { useGetSingleCompareByUserQuery } from "@/redux/services/compare/compareApi";
@@ -20,13 +20,18 @@ import { useGetSingleWishlistByUserQuery } from "@/redux/services/wishlist/wishl
 import DrawerCart from "../Product/DrawerCart";
 import { GiCancel } from "react-icons/gi";
 import { useGetSingleCartByUserQuery } from "@/redux/services/cart/cartApi";
+import { usePathname } from "next/navigation";
+import { toast } from "sonner";
+import { IoMdArrowDropdown } from "react-icons/io";
+import BottomNavigation from "./BottomNavigation";
 
 const Navbar = () => {
+  const pathname = usePathname();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [options, setOptions] = useState([]);
-
+  const dispatch = useDispatch();
   const user = useSelector(useCurrentUser);
   const deviceId = useSelector(useDeviceId);
   const { data } = useGetSingleUserQuery(user?._id);
@@ -48,6 +53,54 @@ const Navbar = () => {
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out successfully!");
+  };
+
+  const links = {
+    Dashboard: `/${data?.role}/dashboard`,
+    Order: `/${data?.role}/orders/order`,
+    Profile: `/${data?.role}/account-setting`,
+    Wishlist: `/${data?.role}/orders/wishlist`,
+    Cart: `/${data?.role}/orders/cart`,
+  };
+
+  const content = (
+    <div>
+      <div className="rounded-md px-16 py-3">
+        <div className="flex flex-col items-start gap-4 text-md">
+          {["Dashboard", "Order", "Profile", "Wishlist", "Cart"].map(
+            (item, index) => (
+              <Link
+                key={index}
+                href={links[item]}
+                className={`gap-2 font-bold duration-300 ${
+                  pathname === links[item]
+                    ? "text-primary hover:text-primary"
+                    : "text-black hover:text-primary"
+                }`}
+              >
+                {item}
+              </Link>
+            )
+          )}
+        </div>
+      </div>
+
+      <div className="flex w-full justify-end pt-3">
+        <Button
+          onClick={handleLogout}
+          className={`w-full font-bold`}
+          size="large"
+          type="primary"
+        >
+          Log Out
+        </Button>
+      </div>
+    </div>
+  );
 
   const handleSearch = (value) => {
     if (!value) {
@@ -120,11 +173,40 @@ const Navbar = () => {
             className="cursor-pointer hover:text-primary duration-300"
             onClick={() => setIsSearchOpen(true)}
           />
-          <Link href={"/sign-in"}>
-            <FaUser className="cursor-pointer hover:text-primary duration-300" />
-          </Link>
+          {user?._id ? (
+            <>
+              {" "}
+              <div className="flex items-center gap-2">
+                <Popover
+                  placement="bottomRight"
+                  content={content}
+                  className="cursor-pointer flex items-center gap-1"
+                >
+                  {data?.profile_image ? (
+                    <Image
+                      src={data?.profile_image}
+                      alt="profile"
+                      height={40}
+                      width={40}
+                      className="rounded-full w-[40px] h-[40px] border-2 border-primary"
+                    />
+                  ) : (
+                    <Avatar className="" size={40} icon={<UserOutlined />} />
+                  )}
+                  <h2 className="font-semibold">{data?.name ?? "User"}</h2>
+                  <IoMdArrowDropdown />
+                </Popover>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link href={"/sign-in"}>
+                <FaUser className="cursor-pointer hover:text-primary duration-300" />
+              </Link>
+            </>
+          )}
 
-          <Link href={"/compare"}>
+          <Link href={"/compare"} className="hidden lg:flex">
             {compareData?.[0]?.product?.length > 0 ? (
               <span className="relative">
                 <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
@@ -136,7 +218,7 @@ const Navbar = () => {
               <FaCodeCompare className="cursor-pointer rotate-90 hover:text-primary duration-300" />
             )}
           </Link>
-          <Link href={"/wishlist"}>
+          <Link href={"/wishlist"} className="hidden lg:flex">
             {wishListData?.length > 0 ? (
               <span className="relative">
                 <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
@@ -148,22 +230,24 @@ const Navbar = () => {
               <FaHeart className="cursor-pointer hover:text-primary duration-300" />
             )}
           </Link>
-          {cartData?.length > 0 ? (
-            <span className="relative">
-              <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
-                {cartData?.length}
+          <div className="hidden lg:flex">
+            {cartData?.length > 0 ? (
+              <span className="relative">
+                <span className="absolute -top-2 -right-2 bg-primary text-white rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                  {cartData?.length}
+                </span>
+                <FaShoppingBag
+                  className="cursor-pointer hover:text-primary duration-300"
+                  onClick={() => setIsCartOpen(true)}
+                />
               </span>
+            ) : (
               <FaShoppingBag
                 className="cursor-pointer hover:text-primary duration-300"
                 onClick={() => setIsCartOpen(true)}
               />
-            </span>
-          ) : (
-            <FaShoppingBag
-              className="cursor-pointer hover:text-primary duration-300"
-              onClick={() => setIsCartOpen(true)}
-            />
-          )}
+            )}
+          </div>
         </div>
       </nav>
 
@@ -226,6 +310,7 @@ const Navbar = () => {
         </div>
         <DrawerCart data={cartData} refetch={refetch} />
       </Drawer>
+      <BottomNavigation setIsCartOpen={setIsCartOpen} />
     </header>
   );
 };
