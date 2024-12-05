@@ -102,7 +102,7 @@ const CheckoutDetails = ({
   }, [subTotal, shippingFee, discountAmount, setGrandTotal]);
 
   return (
-    <div className="lg:w-4/12 w-full">
+    <div className="lg:w-6/12 w-full lg:sticky top-20">
       <div className="space-y-2 p-5 border-2 border-primary rounded-lg mb-4">
         <p className="font-semibold">Discount Option</p>
         <Radio.Group
