@@ -14,7 +14,7 @@ import Image from "next/image";
 import { useState } from "react";
 import DeleteModal from "@/components/Reusable/Modal/DeleteModal";
 import QuickProductView from "@/components/Shared/Product/QuickProductView";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { useGetSingleProductQuery } from "@/redux/services/product/productApi";
 import { useDeviceId } from "@/redux/services/device/deviceSlice";
 
@@ -68,13 +68,13 @@ const Wishlist = () => {
             <h2 className="font-normal text-xl mt-6">
               {wishlistData?.length} Items
             </h2>
-            <div className="mt-10">
+            <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
               {wishlistData?.map((item) => (
                 <div
                   key={item?._id}
-                  className="flex flex-col lg:flex-row items-center gap-4 justify-center mb-10 max-w-6xl mx-auto border-2 p-5 border-primary rounded-xl"
+                  className="flex flex-col items-center gap-4 justify-center mb-10 w-[350px] text-center mx-auto border-2 p-5 border-primary rounded-xl"
                 >
-                  <div className="flex flex-[2] items-center gap-4">
+                  <div className="flex flex-col flex-[2] items-center gap-4">
                     <Image
                       src={`${base_url_image}${
                         formatImagePath(item?.product?.mainImage) ||
@@ -89,7 +89,13 @@ const Wishlist = () => {
                       href={`/products/${item?.product?.slug}`}
                       className="text-xl font-normal hover:underline"
                     >
-                      {item?.product?.name}
+                      <Tooltip placement="top" title={item?.product?.name}>
+                        <h2 className="text-md font-semibold mt-2 mb-4">
+                          {item?.product?.name.length > 30
+                            ? item?.product?.name.slice(0, 30).concat("...")
+                            : item?.product.name}
+                        </h2>
+                      </Tooltip>
                     </Link>
                   </div>
                   <div className="flex items-center gap-4">
